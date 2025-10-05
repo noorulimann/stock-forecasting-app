@@ -7,6 +7,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
+    # Fix Flask-PyMongo configuration
+    app.config['MONGO_URI'] = app.config['MONGODB_URI']
+    
     # Initialize MongoDB
     mongo = PyMongo(app)
     
