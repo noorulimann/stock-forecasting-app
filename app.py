@@ -1160,6 +1160,9 @@ async def get_metrics(
 # Application Entry Point
 # ============================================================================
 
+# Export app for Vercel
+app = app
+
 if __name__ == "__main__":
     import uvicorn
     
