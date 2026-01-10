@@ -1,0 +1,56 @@
+# Development Docker Compose Configuration
+# Use: docker-compose -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  # ========================================
+  # MongoDB - Data Persistence
+  # ========================================
+  mongodb:
+    image: mongo:7.0
+    container_name: stock-mongodb-dev
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: dev123
+      MONGO_INITDB_DATABASE: stock_data_dev
+    volumes:
+      - mongodb_dev_data:/data/db
+    networks:
+      - stock-network-dev
+
+  # ========================================
+  # FastAPI Application (Development Mode)
+  # ========================================
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stock-fastapi-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://admin:dev123@mongodb:27017/
+      - MONGODB_DATABASE=stock_data_dev
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+      - WORKERS=1
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/venv  # Exclude venv
+      - /app/__pycache__  # Exclude cache
+    depends_on:
+      - mongodb
+    networks:
+      - stock-network-dev
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+networks:
+  stock-network-dev:
+    driver: bridge
+
+volumes:
+  mongodb_dev_data:

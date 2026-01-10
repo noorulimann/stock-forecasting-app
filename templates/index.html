@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - FinanceAI Forecaster{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="card-title mb-2">
+                            <i class="fas fa-robot me-2"></i>
+                            Welcome to FinanceAI Forecaster
+                        </h1>
+                        <p class="card-text mb-0">
+                            Advanced machine learning-powered forecasting for stocks, cryptocurrencies, and ForEx instruments.
+                            Our system combines traditional time series models with cutting-edge neural networks for accurate predictions.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-chart-line" style="font-size: 4rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- System Status -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Traditional Models</span>
+                    <span class="status-badge status-success">
+                        <i class="fas fa-check-circle me-1"></i>4 Active
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Neural Models</span>
+                    <span class="status-badge status-success">
+                        <i class="fas fa-check-circle me-1"></i>2 Active
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Ensemble Strategies</span>
+                    <span class="status-badge status-success">
+                        <i class="fas fa-check-circle me-1"></i>5 Available
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Supported Instruments</span>
+                    <span class="status-badge status-success" id="instrumentCount">
+                        <i class="fas fa-check-circle me-1"></i>6 Active
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Navigation
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/forecast" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Forecasting
+                    </a>
+                    <a href="/ensemble" class="btn btn-outline-success">
+                        <i class="fas fa-layer-group me-2"></i>
+                        Ensemble Analysis
+                    </a>
+                    <a href="/performance" class="btn btn-outline-info">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Model Performance
+                    </a>
+                    <button class="btn btn-outline-secondary" onclick="trainModels()">
+                        <i class="fas fa-cogs me-2"></i>
+                        Train Models
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Supported Instruments Overview -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Supported Financial Instruments
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Stocks -->
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-chart-line me-2"></i>Stocks
+                        </h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>AAPL</strong> - Apple Inc.
+                                    <span class="instrument-type-badge type-stock ms-2">Stock</span>
+                                </div>
+                                <span class="badge bg-success">Primary</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>GOOGL</strong> - Alphabet Inc.
+                                    <span class="instrument-type-badge type-stock ms-2">Stock</span>
+                                </div>
+                                <span class="badge bg-secondary">Active</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>MSFT</strong> - Microsoft Corp.
+                                    <span class="instrument-type-badge type-stock ms-2">Stock</span>
+                                </div>
+                                <span class="badge bg-secondary">Active</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>TSLA</strong> - Tesla Inc.
+                                    <span class="instrument-type-badge type-stock ms-2">Stock</span>
+                                </div>
+                                <span class="badge bg-secondary">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Crypto -->
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-warning mb-3">
+                            <i class="fab fa-bitcoin me-2"></i>Cryptocurrencies
+                        </h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>BTC-USD</strong> - Bitcoin
+                                    <span class="instrument-type-badge type-crypto ms-2">Crypto</span>
+                                </div>
+                                <span class="badge bg-secondary">Active</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>ETH-USD</strong> - Ethereum
+                                    <span class="instrument-type-badge type-crypto ms-2">Crypto</span>
+                                </div>
+                                <span class="badge bg-secondary">Active</span>
+                            </div>
+                        </div>
+                        
+                        <h6 class="fw-bold text-success mb-3 mt-4">
+                            <i class="fas fa-exchange-alt me-2"></i>ForEx (Ready to Add)
+                        </h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>EURUSD=X</strong> - EUR/USD
+                                    <span class="instrument-type-badge type-forex ms-2">ForEx</span>
+                                </div>
+                                <span class="badge bg-warning">Ready</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Train Models Function
+async function trainModels() {
+    if (confirm('Start training models for all supported instruments? This may take several minutes.')) {
+        try {
+            const response = await fetch('/api/train', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ train_all: true })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('Model training started successfully!');
+            } else {
+                throw new Error(result.error || 'Training failed');
+            }
+        } catch (error) {
+            console.error('Training error:', error);
+            alert('Training failed: ' + error.message);
+        }
+    }
+}
+
+// Check system status on load
+document.addEventListener('DOMContentLoaded', function() {
+    checkSystemStatus();
+});
+
+async function checkSystemStatus() {
+    try {
+        const response = await fetch('/api/status');
+        const status = await response.json();
+        
+        if (status.supported_instruments) {
+            document.getElementById('instrumentCount').innerHTML = `<i class="fas fa-check-circle me-1"></i>${status.supported_instruments} Active`;
+        }
+    } catch (error) {
+        console.error('Status check failed:', error);
+    }
+}
+</script>
+{% endblock %}

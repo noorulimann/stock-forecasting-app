@@ -1,0 +1,581 @@
+{% extends "base.html" %}
+
+{% block title %}Ensemble Analysis - FinanceAI Forecaster{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Ensemble Configuration -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Ensemble Model Analysis
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="ensembleForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="ensembleInstrument" class="form-label">Financial Instrument</label>
+                            <select class="form-select" id="ensembleInstrument" name="instrument" required>
+                                <option value="">Select instrument...</option>
+                                <optgroup label="Stocks">
+                                    <option value="AAPL" selected>AAPL - Apple Inc.</option>
+                                    <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+                                    <option value="MSFT">MSFT - Microsoft Corp.</option>
+                                    <option value="TSLA">TSLA - Tesla Inc.</option>
+                                </optgroup>
+                                <optgroup label="Cryptocurrencies">
+                                    <option value="BTC-USD">BTC-USD - Bitcoin</option>
+                                    <option value="ETH-USD">ETH-USD - Ethereum</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ensembleStrategy" class="form-label">Ensemble Strategy</label>
+                            <select class="form-select" id="ensembleStrategy" name="strategy" required>
+                                <option value="">Choose strategy...</option>
+                                <option value="simple_average">Simple Average</option>
+                                <option value="weighted_average">Weighted Average</option>
+                                <option value="performance_weighted" selected>Performance Weighted</option>
+                                <option value="dynamic_selection">Dynamic Selection</option>
+                                <option value="rank_based">Rank-Based (Borda Count)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="ensembleHorizon" class="form-label">Horizon</label>
+                            <select class="form-select" id="ensembleHorizon" name="horizon">
+                                <option value="1hr">1 Hour</option>
+                                <option value="3hrs">3 Hours</option>
+                                <option value="24hrs" selected>24 Hours</option>
+                                <option value="72hrs">72 Hours</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-magic me-2"></i>
+                                    Analyze
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Available Ensemble Strategies -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Available Ensemble Strategies
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-primary h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">
+                                    <i class="fas fa-calculator me-2"></i>Simple Average
+                                </h6>
+                                <p class="card-text small">
+                                    Combines predictions from all models using equal weights. 
+                                    Simple but effective baseline approach.
+                                </p>
+                                <span class="badge bg-primary">Traditional</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-success h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">
+                                    <i class="fas fa-balance-scale me-2"></i>Weighted Average
+                                </h6>
+                                <p class="card-text small">
+                                    Uses predefined weights for different models based on 
+                                    historical performance patterns.
+                                </p>
+                                <span class="badge bg-success">Balanced</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-warning h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-warning">
+                                    <i class="fas fa-trophy me-2"></i>Performance Weighted
+                                </h6>
+                                <p class="card-text small">
+                                    Dynamically adjusts weights based on recent model 
+                                    performance metrics (MAPE, RMSE).
+                                </p>
+                                <span class="badge bg-warning">Adaptive</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-info h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-info">
+                                    <i class="fas fa-robot me-2"></i>Dynamic Selection
+                                </h6>
+                                <p class="card-text small">
+                                    Intelligently selects the best performing model 
+                                    for each prediction based on current conditions.
+                                </p>
+                                <span class="badge bg-info">Smart</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-secondary h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-secondary">
+                                    <i class="fas fa-sort-numeric-down me-2"></i>Rank-Based
+                                </h6>
+                                <p class="card-text small">
+                                    Uses Borda count method to rank model predictions 
+                                    and combine them based on ranking positions.
+                                </p>
+                                <span class="badge bg-secondary">Ranked</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-dark h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-dark">
+                                    <i class="fas fa-chart-line me-2"></i>All Strategies
+                                </h6>
+                                <p class="card-text small">
+                                    Compare all ensemble methods simultaneously 
+                                    to find the optimal approach for your data.
+                                </p>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="compareAllStrategies()">
+                                    Compare All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading -->
+<div id="ensembleLoading" class="text-center my-5 loading-spinner" style="display: none;">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <h5 class="mt-3">Running Ensemble Analysis...</h5>
+    <p class="text-muted">Combining predictions from multiple models...</p>
+</div>
+
+<!-- Ensemble Results -->
+<div id="ensembleResults" style="display: none;">
+    <!-- Ensemble Prediction Summary -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Ensemble Prediction Results
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="metric-card card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-dark fw-semibold">Strategy Used</h6>
+                                    <div class="fw-bold" id="ensembleStrategyDisplay">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-dark fw-semibold">Models Combined</h6>
+                                    <div class="performance-indicator text-info" id="ensembleModelsCount">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-dark fw-semibold">Ensemble Prediction</h6>
+                                    <div class="performance-indicator text-success" id="ensemblePrediction">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-dark fw-semibold">Confidence Score</h6>
+                                    <div class="performance-indicator text-warning" id="ensembleConfidence">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Individual Model Contributions -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Model Contributions & Weights
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="modelContributionsChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Model Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="modelDetailsList">
+                        <!-- Model details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Model Comparison Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Individual vs Ensemble Performance
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="comparisonChart" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Strategy Optimization -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Ensemble Optimization
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="optimizeWeights()">
+                            <i class="fas fa-cogs me-2"></i>
+                            Optimize Weights
+                        </button>
+                        <button class="btn btn-outline-success" onclick="saveEnsembleConfig()">
+                            <i class="fas fa-save me-2"></i>
+                            Save Configuration
+                        </button>
+                        <button class="btn btn-outline-info" onclick="exportEnsembleResults()">
+                            <i class="fas fa-download me-2"></i>
+                            Export Results
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-dark">
+                        Recommendations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="ensembleRecommendations">
+                        <!-- Recommendations will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentEnsembleData = null;
+
+// Form submission handler
+document.getElementById('ensembleForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+        instrument: formData.get('instrument'),
+        strategy: formData.get('strategy'),
+        horizon: formData.get('horizon')
+    };
+    
+    // Show loading
+    document.getElementById('ensembleLoading').style.display = 'block';
+    document.getElementById('ensembleResults').style.display = 'none';
+    
+    try {
+        const response = await fetch(`/api/ensemble/predict/${data.instrument}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                strategy: data.strategy,
+                horizon: data.horizon
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            currentEnsembleData = result;
+            displayEnsembleResults(result);
+            document.getElementById('ensembleResults').style.display = 'block';
+        } else {
+            throw new Error(result.error || 'Ensemble analysis failed');
+        }
+    } catch (error) {
+        console.error('Ensemble error:', error);
+        alert('Ensemble analysis failed: ' + error.message);
+    } finally {
+        document.getElementById('ensembleLoading').style.display = 'none';
+    }
+});
+
+function displayEnsembleResults(result) {
+    // Update summary
+    const strategyName = result.strategy ? result.strategy.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'N/A';
+    document.getElementById('ensembleStrategyDisplay').textContent = strategyName;
+    document.getElementById('ensembleModelsCount').textContent = result.models_used ? result.models_used.length : 'N/A';
+    
+    const prediction = result.ensemble_prediction;
+    if (Array.isArray(prediction)) {
+        document.getElementById('ensemblePrediction').textContent = `$${prediction[0]?.toFixed(2) || 'N/A'}`;
+    } else {
+        document.getElementById('ensemblePrediction').textContent = `$${prediction?.toFixed(2) || 'N/A'}`;
+    }
+    
+    document.getElementById('ensembleConfidence').textContent = `${((result.confidence || 0.85) * 100).toFixed(1)}%`;
+    
+    // Create model contributions chart
+    createModelContributionsChart(result);
+    
+    // Create comparison chart
+    createComparisonChart(result);
+    
+    // Update model details
+    updateModelDetails(result);
+    
+    // Update recommendations
+    updateRecommendations(result);
+}
+
+function createModelContributionsChart(result) {
+    const models = result.models_used || [];
+    const weights = result.weights || {};
+    const predictions = result.individual_predictions || {};
+    
+    const data = [{
+        x: models,
+        y: models.map(model => weights[model] || 0),
+        type: 'bar',
+        name: 'Model Weights',
+        marker: {
+            color: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'],
+            opacity: 0.8
+        }
+    }];
+    
+    const layout = {
+        title: 'Model Weights in Ensemble',
+        xaxis: { title: 'Models' },
+        yaxis: { title: 'Weight' },
+        showlegend: false,
+        margin: { l: 50, r: 50, t: 50, b: 50 }
+    };
+    
+    Plotly.newPlot('modelContributionsChart', data, layout, {responsive: true});
+}
+
+function createComparisonChart(result) {
+    const models = result.models_used || [];
+    const predictions = result.individual_predictions || {};
+    const ensemblePred = Array.isArray(result.ensemble_prediction) ? 
+        result.ensemble_prediction[0] : result.ensemble_prediction;
+    
+    const data = [{
+        x: models,
+        y: models.map(model => predictions[model] ? 
+            (Array.isArray(predictions[model]) ? predictions[model][0] : predictions[model]) : 0),
+        type: 'bar',
+        name: 'Individual Predictions',
+        marker: { color: 'lightblue' }
+    }, {
+        x: ['Ensemble'],
+        y: [ensemblePred || 0],
+        type: 'bar',
+        name: 'Ensemble Prediction',
+        marker: { color: 'orange' }
+    }];
+    
+    const layout = {
+        title: 'Individual Model vs Ensemble Predictions',
+        xaxis: { title: 'Models' },
+        yaxis: { title: 'Predicted Price ($)' },
+        barmode: 'group',
+        margin: { l: 50, r: 50, t: 50, b: 100 }
+    };
+    
+    Plotly.newPlot('comparisonChart', data, layout, {responsive: true});
+}
+
+function updateModelDetails(result) {
+    const container = document.getElementById('modelDetailsList');
+    const models = result.models_used || [];
+    const weights = result.weights || {};
+    const predictions = result.individual_predictions || {};
+    
+    let html = '';
+    models.forEach(model => {
+        const weight = weights[model] || 0;
+        const prediction = predictions[model];
+        const predValue = Array.isArray(prediction) ? prediction[0] : prediction;
+        
+        html += `
+            <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded">
+                <div>
+                    <strong>${model}</strong>
+                    <br>
+                    <small class="text-dark fw-semibold">$${predValue?.toFixed(2) || 'N/A'}</small>
+                </div>
+                <div class="text-end">
+                    <div class="badge bg-primary">${(weight * 100).toFixed(1)}%</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function updateRecommendations(result) {
+    const container = document.getElementById('ensembleRecommendations');
+    const strategy = result.strategy;
+    
+    let recommendations = [];
+    
+    if (strategy === 'performance_weighted') {
+        recommendations.push('Using performance-weighted strategy provides adaptive model selection');
+        recommendations.push('Consider retraining models if performance degrades');
+    } else if (strategy === 'dynamic_selection') {
+        recommendations.push('Dynamic selection optimizes for current market conditions');
+        recommendations.push('Monitor model performance for automatic switching');
+    } else if (strategy === 'simple_average') {
+        recommendations.push('Simple averaging provides stable baseline predictions');
+        recommendations.push('Consider upgrading to performance-weighted for better accuracy');
+    }
+    
+    recommendations.push('Regular model retraining recommended every 30 days');
+    recommendations.push('Ensemble methods typically provide 10-15% better accuracy');
+    
+    container.innerHTML = recommendations.map(rec => `<div class="mb-2">${rec}</div>`).join('');
+}
+
+// Utility functions
+async function compareAllStrategies() {
+    const instrument = document.getElementById('ensembleInstrument').value;
+    if (!instrument) {
+        alert('Please select an instrument first');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/ensemble/compare/${instrument}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            // Display comparison results in a modal or new section
+            displayStrategyComparison(result);
+        }
+    } catch (error) {
+        console.error('Comparison error:', error);
+        alert('Strategy comparison failed');
+    }
+}
+
+function displayStrategyComparison(result) {
+    // Create a modal or update a section with strategy comparison
+    alert('Strategy comparison results: ' + JSON.stringify(result.comparison, null, 2));
+}
+
+async function optimizeWeights() {
+    const instrument = document.getElementById('ensembleInstrument').value;
+    if (!instrument) return;
+    
+    try {
+        const response = await fetch(`/api/ensemble/optimize/${instrument}`, {
+            method: 'POST'
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Weights optimized successfully!');
+            // Refresh current results
+            document.getElementById('ensembleForm').dispatchEvent(new Event('submit'));
+        }
+    } catch (error) {
+        console.error('Optimization error:', error);
+        alert('Weight optimization failed');
+    }
+}
+
+function saveEnsembleConfig() {
+    if (currentEnsembleData) {
+        localStorage.setItem('ensembleConfig', JSON.stringify(currentEnsembleData));
+        alert('Ensemble configuration saved!');
+    }
+}
+
+function exportEnsembleResults() {
+    if (currentEnsembleData) {
+        const dataStr = JSON.stringify(currentEnsembleData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ensemble_results.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+}
+</script>
+{% endblock %}

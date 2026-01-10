@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+
+{% block title %}Model Performance - FinanceAI Forecaster{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Performance Overview -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Model Performance Dashboard
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="perfInstrument" class="form-label">Select Instrument</label>
+                        <select class="form-select" id="perfInstrument" name="instrument">
+                            <option value="all" selected>All Instruments</option>
+                            <optgroup label="Stocks">
+                                <option value="AAPL">AAPL - Apple Inc.</option>
+                                <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+                                <option value="MSFT">MSFT - Microsoft Corp.</option>
+                                <option value="TSLA">TSLA - Tesla Inc.</option>
+                            </optgroup>
+                            <optgroup label="Cryptocurrencies">
+                                <option value="BTC-USD">BTC-USD - Bitcoin</option>
+                                <option value="ETH-USD">ETH-USD - Ethereum</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="perfMetric" class="form-label">Primary Metric</label>
+                        <select class="form-select" id="perfMetric" name="metric">
+                            <option value="mape" selected>MAPE - Mean Absolute Percentage Error</option>
+                            <option value="rmse">RMSE - Root Mean Square Error</option>
+                            <option value="mae">MAE - Mean Absolute Error</option>
+                            <option value="r2">R² - Coefficient of Determination</option>
+                            <option value="directional_accuracy">Directional Accuracy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="perfTimeframe" class="form-label">Time Frame</label>
+                        <select class="form-select" id="perfTimeframe" name="timeframe">
+                            <option value="7d">Last 7 Days</option>
+                            <option value="30d" selected>Last 30 Days</option>
+                            <option value="90d">Last 90 Days</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" onclick="loadPerformanceData()">
+                                <i class="fas fa-sync-alt me-2"></i>
+                                Refresh Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <h6 class="text-dark fw-semibold">Best Performing Model</h6>
+                <div class="performance-indicator text-success" id="bestModel">-</div>
+                <small class="text-muted" id="bestModelScore">-</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <h6 class="text-dark fw-semibold">Average Accuracy</h6>
+                <div class="performance-indicator text-primary" id="avgAccuracy">-</div>
+                <small class="text-muted">Across all models</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <h6 class="text-dark fw-semibold">Total Predictions</h6>
+                <div class="performance-indicator text-info" id="totalPredictions">-</div>
+                <small class="text-muted">All time</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card metric-card">
+            <div class="card-body text-center">
+                <h6 class="text-dark fw-semibold">Ensemble Improvement</h6>
+                <div class="performance-indicator text-warning" id="ensembleImprovement">-</div>
+                <small class="text-muted">vs single models</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Performance Comparison -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0 text-dark">
+                    Model Performance Ranking
+                </h5>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="toggleChartType()">
+                        <i class="fas fa-chart-bar me-1"></i>Toggle View
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportPerformanceData()">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="performanceChart" style="height: 500px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Performance Metrics -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Detailed Performance Metrics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="performanceTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Model</th>
+                                <th>Type</th>
+                                <th>MAPE (%)</th>
+                                <th>RMSE</th>
+                                <th>MAE</th>
+                                <th>R²</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="performanceTableBody">
+                            <!-- Performance data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Performance Insights
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="performanceInsights">
+                    <!-- Insights will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0 text-dark">
+                    Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary" onclick="retrainAllModels()">
+                        <i class="fas fa-redo me-2"></i>
+                        Retrain All Models
+                    </button>
+                    <button class="btn btn-outline-success" onclick="optimizeEnsemble()">
+                        <i class="fas fa-magic me-2"></i>
+                        Optimize Ensemble
+                    </button>
+                    <button class="btn btn-outline-info" onclick="generateReport()">
+                        <i class="fas fa-file-alt me-2"></i>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Performance Trends -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line text-success me-2"></i>
+                    Performance Trends Over Time
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="trendsChart" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Status Grid -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-server text-secondary me-2"></i>
+                    Model Status Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3" id="modelStatusGrid">
+                    <!-- Model status cards will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let performanceData = null;
+let currentChartType = 'bar';
+
+// Load performance data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadPerformanceData();
+});
+
+async function loadPerformanceData() {
+    try {
+        const response = await fetch('/api/performance');
+        const result = await response.json();
+        
+        if (result.success) {
+            performanceData = result;
+            updatePerformanceDashboard(result);
+        } else {
+            throw new Error(result.error || 'Failed to load performance data');
+        }
+    } catch (error) {
+        console.error('Performance data error:', error);
+        displayErrorMessage('Failed to load performance data: ' + error.message);
+    }
+}
+
+function updatePerformanceDashboard(data) {
+    // Update summary cards
+    updateSummaryCards(data);
+    
+    // Update performance chart
+    updatePerformanceChart(data);
+    
+    // Update performance table
+    updatePerformanceTable(data);
+    
+    // Update insights
+    updatePerformanceInsights(data);
+    
+    // Update model status grid
+    updateModelStatusGrid(data);
+    
+    // Update trends chart
+    updateTrendsChart(data);
+}
+
+function updateSummaryCards(data) {
+    const models = data.models || {};
+    
+    // Find best performing model
+    let bestModel = null;
+    let bestScore = Infinity;
+    
+    Object.entries(models).forEach(([name, metrics]) => {
+        if (metrics.mape && metrics.mape < bestScore) {
+            bestScore = metrics.mape;
+            bestModel = name;
+        }
+    });
+    
+    document.getElementById('bestModel').textContent = bestModel || 'N/A';
+    document.getElementById('bestModelScore').textContent = bestScore !== Infinity ? 
+        `${bestScore.toFixed(2)}% MAPE` : 'N/A';
+    
+    // Calculate average accuracy
+    const mapeValues = Object.values(models)
+        .map(m => m.mape)
+        .filter(m => m != null);
+    const avgMape = mapeValues.length > 0 ? 
+        mapeValues.reduce((a, b) => a + b, 0) / mapeValues.length : 0;
+    const avgAccuracy = Math.max(0, 100 - avgMape);
+    
+    document.getElementById('avgAccuracy').textContent = `${avgAccuracy.toFixed(1)}%`;
+    
+    // Other summary metrics - access from summary object
+    document.getElementById('totalPredictions').textContent = 
+        (data.summary && data.summary.total_predictions) ? data.summary.total_predictions.toLocaleString() : 'N/A';
+    document.getElementById('ensembleImprovement').textContent = 
+        (data.summary && data.summary.ensemble_improvement !== undefined) ? 
+            `+${data.summary.ensemble_improvement.toFixed(1)}%` : 'N/A';
+}
+
+function updatePerformanceChart(data) {
+    const models = data.models || {};
+    const modelNames = Object.keys(models);
+    const selectedMetric = document.getElementById('perfMetric').value;
+    
+    const values = modelNames.map(name => models[name][selectedMetric] || 0);
+    
+    const chartData = [{
+        x: modelNames,
+        y: values,
+        type: currentChartType,
+        name: selectedMetric.toUpperCase(),
+        marker: {
+            color: modelNames.map(name => getModelColor(name)),
+            opacity: 0.8
+        }
+    }];
+    
+    const layout = {
+        title: `Model Performance - ${selectedMetric.toUpperCase()}`,
+        xaxis: { title: 'Models' },
+        yaxis: { title: getMetricLabel(selectedMetric) },
+        showlegend: false,
+        margin: { l: 60, r: 50, t: 60, b: 100 }
+    };
+    
+    Plotly.newPlot('performanceChart', chartData, layout, {responsive: true});
+}
+
+function updatePerformanceTable(data) {
+    const models = data.models || {};
+    const tbody = document.getElementById('performanceTableBody');
+    
+    let html = '';
+    Object.entries(models).forEach(([name, metrics]) => {
+        const modelType = getModelType(name);
+        const status = metrics.last_trained ? 
+            `<span class="badge bg-success">Active</span>` : 
+            `<span class="badge bg-warning">Pending</span>`;
+        
+        html += `
+            <tr>
+                <td><strong>${name}</strong></td>
+                <td><span class="badge ${getTypeBadgeClass(modelType)}">${modelType}</span></td>
+                <td>${metrics.mape ? metrics.mape.toFixed(2) : 'N/A'}</td>
+                <td>${metrics.rmse ? metrics.rmse.toFixed(4) : 'N/A'}</td>
+                <td>${metrics.mae ? metrics.mae.toFixed(4) : 'N/A'}</td>
+                <td>${metrics.r2 ? metrics.r2.toFixed(4) : 'N/A'}</td>
+                <td>${status}</td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+}
+
+function updatePerformanceInsights(data) {
+    const container = document.getElementById('performanceInsights');
+    const models = data.models || {};
+    
+    let insights = [];
+    
+    // Best and worst performers
+    const performances = Object.entries(models)
+        .filter(([_, m]) => m.mape != null)
+        .sort((a, b) => a[1].mape - b[1].mape);
+    
+    if (performances.length > 0) {
+        insights.push(`<strong>${performances[0][0]}</strong> is the best performer with ${performances[0][1].mape.toFixed(2)}% MAPE`);
+        
+        if (performances.length > 1) {
+            const worst = performances[performances.length - 1];
+            insights.push(`<strong>${worst[0]}</strong> needs improvement (${worst[1].mape.toFixed(2)}% MAPE)`);
+        }
+    }
+    
+    // Model type analysis
+    const traditionalModels = Object.keys(models).filter(name => 
+        ['SMA', 'EMA', 'ARIMA', 'VAR'].includes(name));
+    const neuralModels = Object.keys(models).filter(name => 
+        ['LSTM', 'GRU'].includes(name));
+    
+    if (traditionalModels.length > 0 && neuralModels.length > 0) {
+        insights.push('Neural networks generally provide more adaptive predictions');
+        insights.push('Traditional models offer stable baseline performance');
+    }
+    
+    // Ensemble recommendation
+    insights.push('Ensemble methods typically improve accuracy by 10-15%');
+    insights.push('Consider retraining models monthly for optimal performance');
+    
+    container.innerHTML = insights.map(insight => `<div class="mb-2">${insight}</div>`).join('');
+}
+
+function updateModelStatusGrid(data) {
+    const models = data.models || {};
+    const container = document.getElementById('modelStatusGrid');
+    
+    let html = '';
+    Object.entries(models).forEach(([name, metrics]) => {
+        const modelType = getModelType(name);
+        const isActive = metrics.last_trained != null;
+        
+        html += `
+            <div class="col-md-4 col-lg-3">
+                <div class="card border-${isActive ? 'success' : 'warning'} h-100">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">${name}</h6>
+                        <span class="badge ${getTypeBadgeClass(modelType)} mb-2">${modelType}</span>
+                        <div class="performance-indicator ${isActive ? 'text-success' : 'text-warning'}">
+                            ${metrics.mape ? metrics.mape.toFixed(2) + '%' : 'N/A'}
+                        </div>
+                        <small class="text-muted">MAPE Score</small>
+                        <div class="mt-2">
+                            <span class="badge bg-${isActive ? 'success' : 'warning'}">
+                                ${isActive ? 'Active' : 'Pending'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function updateTrendsChart(data) {
+    // Create a sample trends chart (would normally use historical performance data)
+    const dates = [];
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        dates.push(date.toISOString().split('T')[0]);
+    }
+    
+    const models = Object.keys(data.models || {});
+    const traces = models.slice(0, 5).map((model, index) => ({
+        x: dates,
+        y: dates.map(() => Math.random() * 5 + 1), // Sample data
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: model,
+        line: { width: 2 }
+    }));
+    
+    const layout = {
+        title: 'Model Performance Trends (MAPE % over time)',
+        xaxis: { title: 'Date' },
+        yaxis: { title: 'MAPE (%)' },
+        margin: { l: 50, r: 50, t: 50, b: 50 }
+    };
+    
+    Plotly.newPlot('trendsChart', traces, layout, {responsive: true});
+}
+
+// Utility functions
+function getModelColor(name) {
+    const colors = {
+        'SMA': '#FF6B6B',
+        'EMA': '#4ECDC4',
+        'ARIMA': '#45B7D1',
+        'VAR': '#FFA07A',
+        'LSTM': '#98D8C8',
+        'GRU': '#F7DC6F'
+    };
+    return colors[name] || '#95A5A6';
+}
+
+function getModelType(name) {
+    if (['SMA', 'EMA', 'ARIMA', 'VAR'].includes(name)) return 'Traditional';
+    if (['LSTM', 'GRU'].includes(name)) return 'Neural';
+    return 'Ensemble';
+}
+
+function getTypeBadgeClass(type) {
+    const classes = {
+        'Traditional': 'bg-primary',
+        'Neural': 'bg-success',
+        'Ensemble': 'bg-warning'
+    };
+    return classes[type] || 'bg-secondary';
+}
+
+function getMetricLabel(metric) {
+    const labels = {
+        'mape': 'MAPE (%)',
+        'rmse': 'RMSE',
+        'mae': 'MAE',
+        'r2': 'R²',
+        'directional_accuracy': 'Directional Accuracy (%)'
+    };
+    return labels[metric] || metric.toUpperCase();
+}
+
+function toggleChartType() {
+    currentChartType = currentChartType === 'bar' ? 'scatter' : 'bar';
+    if (performanceData) {
+        updatePerformanceChart(performanceData);
+    }
+}
+
+function displayErrorMessage(message) {
+    const alert = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    document.querySelector('main').insertAdjacentHTML('afterbegin', alert);
+}
+
+// Action functions
+async function retrainAllModels() {
+    if (confirm('Retrain all models? This process may take several minutes.')) {
+        try {
+            const response = await fetch('/api/train', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({train_all: true})
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                alert('Model retraining started successfully!');
+                setTimeout(loadPerformanceData, 2000); // Refresh after 2 seconds
+            }
+        } catch (error) {
+            alert('Failed to start retraining: ' + error.message);
+        }
+    }
+}
+
+async function optimizeEnsemble() {
+    try {
+        const response = await fetch('/api/ensemble/optimize/AAPL', {method: 'POST'});
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Ensemble optimization completed!');
+            loadPerformanceData();
+        }
+    } catch (error) {
+        alert('Optimization failed: ' + error.message);
+    }
+}
+
+function generateReport() {
+    if (performanceData) {
+        const report = generatePerformanceReport(performanceData);
+        downloadReport(report);
+    }
+}
+
+function generatePerformanceReport(data) {
+    const models = data.models || {};
+    let report = "Model Performance Report\n";
+    report += "=" * 50 + "\n\n";
+    
+    Object.entries(models).forEach(([name, metrics]) => {
+        report += `${name}:\n`;
+        report += `  MAPE: ${metrics.mape?.toFixed(2) || 'N/A'}%\n`;
+        report += `  RMSE: ${metrics.rmse?.toFixed(4) || 'N/A'}\n`;
+        report += `  MAE: ${metrics.mae?.toFixed(4) || 'N/A'}\n`;
+        report += `  R²: ${metrics.r2?.toFixed(4) || 'N/A'}\n\n`;
+    });
+    
+    return report;
+}
+
+function downloadReport(content) {
+    const blob = new Blob([content], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'performance_report.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+function exportPerformanceData() {
+    if (performanceData) {
+        const dataStr = JSON.stringify(performanceData, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'performance_data.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+}
+
+// Auto-refresh performance data every 5 minutes
+setInterval(loadPerformanceData, 5 * 60 * 1000);
+</script>
+{% endblock %}

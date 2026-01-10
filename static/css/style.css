@@ -1,0 +1,296 @@
+/* FinanceAI Forecaster - Custom Styles */
+
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --success-color: #4facfe;
+    --warning-color: #fa709a;
+    --info-color: #a8edea;
+    --dark-color: #2c3e50;
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+}
+
+/* Enhanced Card Animations */
+.card {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Card Title Styles - Make headings clearly visible */
+.card-title,
+.card-header h5,
+.card-header h6,
+.card-body h5,
+.card-body h6 {
+    color: #1a1a1a !important;
+    font-weight: 600;
+}
+
+/* Form labels should also be clearly visible */
+.form-label {
+    color: #1a1a1a;
+    font-weight: 500;
+}
+
+/* Custom Button Styles */
+.btn-gradient-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-gradient-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    color: white;
+}
+
+/* Metric Cards Enhancement */
+.metric-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+.metric-card .performance-indicator {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Chart Container Enhancements */
+.chart-container {
+    position: relative;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(102,126,234,0.05), rgba(118,75,162,0.05));
+    border-radius: 16px;
+    z-index: -1;
+}
+
+/* Loading Animations */
+.loading-spinner {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Status Badges */
+.status-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.status-success {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.status-warning {
+    background: var(--warning-gradient);
+    color: white;
+}
+
+.status-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+}
+
+/* Instrument Type Badges */
+.instrument-type-badge {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+}
+
+.type-stock {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.type-crypto {
+    background: var(--warning-gradient);
+    color: white;
+}
+
+.type-forex {
+    background: var(--success-gradient);
+    color: white;
+}
+
+/* Form Enhancements */
+.form-select:focus,
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-select,
+.form-control {
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+}
+
+/* Navigation Enhancements */
+.navbar {
+    background: var(--primary-gradient) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-1px);
+}
+
+/* Table Enhancements */
+.table-hover tbody tr:hover {
+    background: linear-gradient(90deg, rgba(102,126,234,0.05), rgba(118,75,162,0.05));
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+/* Footer Styling */
+footer {
+    background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+    border-top: 1px solid rgba(102,126,234,0.1);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+    .performance-indicator {
+        font-size: 1.5rem !important;
+    }
+    
+    .metric-card .card-body {
+        padding: 1rem;
+    }
+    
+    .chart-container {
+        margin: 10px 0;
+        padding: 15px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+        color: #ecf0f1;
+    }
+    
+    .chart-container {
+        background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+    }
+    
+    .table {
+        color: #ecf0f1;
+    }
+    
+    .table-hover tbody tr:hover {
+        background: rgba(52, 73, 94, 0.3);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-gradient);
+}
+
+/* Print Styles */
+@media print {
+    .navbar, footer, .btn, .loading-spinner {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+    
+    .chart-container {
+        page-break-inside: avoid;
+    }
+}
