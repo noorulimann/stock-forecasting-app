@@ -1,4 +1,4 @@
-# 📈 Stock Forecasting Application
+#  Stock Forecasting Application
 
 > A production-ready machine learning pipeline for financial forecasting with ensemble methods, modern gradient boosting, and deep learning models.
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 A comprehensive end-to-end machine learning pipeline for stock price forecasting, demonstrating industry-standard practices in data engineering, model training, experiment tracking, and deployment.
 
@@ -25,7 +25,7 @@ A comprehensive end-to-end machine learning pipeline for stock price forecasting
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐
@@ -64,7 +64,7 @@ A comprehensive end-to-end machine learning pipeline for stock price forecasting
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -109,7 +109,7 @@ A comprehensive end-to-end machine learning pipeline for stock price forecasting
 
 ---
 
-## 🐳 Docker Deployment
+##  Docker Deployment
 
 ### Development Mode
 ```bash
@@ -128,7 +128,7 @@ The application will be available at:
 
 ---
 
-## 📊 Supported Instruments
+##  Supported Instruments
 
 ### Stocks
 - **AAPL** - Apple Inc.
@@ -142,7 +142,7 @@ The application will be available at:
 
 ---
 
-## 🤖 Models
+##  Models
 
 ### 1. LightGBM
 - Modern gradient boosting framework
@@ -171,7 +171,7 @@ The application will be available at:
 
 ---
 
-## 🛠️ API Endpoints
+##  API Endpoints
 
 ### Forecasting
 ```http
@@ -217,7 +217,7 @@ For complete API documentation, visit `/docs` after starting the server.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 stock-forecasting-app/
@@ -254,7 +254,7 @@ stock-forecasting-app/
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 Run the test suite:
 ```bash
@@ -270,7 +270,7 @@ pytest tests/test_end_to_end.py
 
 ---
 
-## 📈 Performance Metrics
+##  Performance Metrics
 
 The application tracks the following metrics:
 
@@ -284,7 +284,7 @@ All metrics are logged to MLflow for experiment tracking and comparison.
 
 ---
 
-## 🔧 Configuration
+##  Configuration
 
 Edit `.env` file to configure:
 
@@ -306,33 +306,7 @@ ALPHA_VANTAGE_KEY=your_key_here  # Optional
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📧 Contact
-
-For questions or support, please open an issue in the repository.
-
----
-
-## 🙏 Acknowledgments
-
-- **Yahoo Finance** for providing financial data
-- **LightGBM** team for the excellent gradient boosting framework
-- **FastAPI** team for the modern web framework
-- **MLflow** for experiment tracking capabilities
