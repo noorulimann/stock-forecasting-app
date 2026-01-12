@@ -71,3 +71,4 @@ htmlcov/
 
 # MongoDB
 mongodb_data/
+.vercel
