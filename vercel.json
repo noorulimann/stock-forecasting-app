@@ -21,7 +21,6 @@
     }
   ],
   "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "MLFLOW_TRACKING_URI": "@mlflow_uri"
+    "PYTHON_VERSION": "3.9"
   }
 }

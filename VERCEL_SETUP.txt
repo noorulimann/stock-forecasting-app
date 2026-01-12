@@ -1,0 +1,123 @@
+═══════════════════════════════════════════════════════════════════
+  VERCEL DEPLOYMENT SETUP - ENVIRONMENT VARIABLES
+═══════════════════════════════════════════════════════════════════
+
+After pushing to GitHub, configure these in Vercel Dashboard:
+
+📍 Go to: https://vercel.com/new
+📍 Import: noorulimann/stock-forecasting-app-vercel
+
+───────────────────────────────────────────────────────────────────
+STEP 1: ADD ENVIRONMENT VARIABLES
+───────────────────────────────────────────────────────────────────
+
+In Vercel Dashboard → Settings → Environment Variables → Add
+
+Variable 1:
+──────────
+Name:         MONGODB_URI
+Value:        mongodb+srv://forecasting_user:noor123iman@cluster0.fdma2vg.mongodb.net/forecasting_db?retryWrites=true&w=majority&appName=Cluster0
+Environments: ✓ Production  ✓ Preview  ✓ Development
+
+
+Variable 2:
+──────────
+Name:         SECRET_KEY
+Value:        change-this-to-a-random-secret-key-before-deploying
+Environments: ✓ Production  ✓ Preview  ✓ Development
+
+💡 Generate a secure key:
+   - Windows PowerShell: [System.Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+   - Online: https://randomkeygen.com/
+
+
+Variable 3:
+──────────
+Name:         DATABASE_NAME
+Value:        forecasting_db
+Environments: ✓ Production  ✓ Preview  ✓ Development
+
+
+Variable 4:
+──────────
+Name:         PYTHON_VERSION
+Value:        3.9
+Environments: ✓ Production  ✓ Preview  ✓ Development
+
+
+Variable 5 (Optional):
+──────────
+Name:         MODEL_SAVE_PATH
+Value:        /tmp/saved_models/
+Environments: ✓ Production  ✓ Preview  ✓ Development
+
+
+───────────────────────────────────────────────────────────────────
+STEP 2: BUILD SETTINGS
+───────────────────────────────────────────────────────────────────
+
+Framework Preset:       Other
+Build Command:          pip install -r requirements-vercel.txt
+Output Directory:       .
+Install Command:        pip install -r requirements-vercel.txt
+Development Command:    python app.py
+Root Directory:         (leave blank)
+
+
+───────────────────────────────────────────────────────────────────
+STEP 3: VERIFY DEPLOYMENT
+───────────────────────────────────────────────────────────────────
+
+Once deployed, test these URLs:
+
+✓ Homepage:
+  https://stock-forecasting-app-vercel.vercel.app/
+
+✓ API Test:
+  https://stock-forecasting-app-vercel.vercel.app/api/instruments
+
+✓ LightGBM Training:
+  POST https://stock-forecasting-app-vercel.vercel.app/api/lightgbm/train/AAPL
+
+
+───────────────────────────────────────────────────────────────────
+MONGODB ATLAS SETUP (Already Done ✓)
+───────────────────────────────────────────────────────────────────
+
+Your MongoDB is already configured:
+✓ Cluster: cluster0.fdma2vg.mongodb.net
+✓ Database: forecasting_db
+✓ User: forecasting_user
+
+Ensure IP Whitelist:
+1. Go to: https://cloud.mongodb.com
+2. Click: Network Access
+3. Verify: 0.0.0.0/0 is whitelisted (allows Vercel servers)
+
+
+───────────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────────
+
+If deployment fails:
+
+1. Check Build Logs in Vercel Dashboard
+2. Verify all environment variables are set
+3. Ensure MongoDB Atlas IP whitelist includes 0.0.0.0/0
+4. Check requirements-vercel.txt has all dependencies
+5. Review function logs for runtime errors
+
+
+───────────────────────────────────────────────────────────────────
+QUICK LINKS
+───────────────────────────────────────────────────────────────────
+
+Vercel Dashboard:  https://vercel.com/dashboard
+Import Project:    https://vercel.com/new
+MongoDB Atlas:     https://cloud.mongodb.com
+GitHub Repo:       https://github.com/noorulimann/stock-forecasting-app-vercel
+
+
+═══════════════════════════════════════════════════════════════════
+  READY TO DEPLOY! 🚀
+═══════════════════════════════════════════════════════════════════
